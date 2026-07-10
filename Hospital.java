@@ -4,10 +4,7 @@ import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -91,6 +88,20 @@ public class Hospital {
         System.out.println(sb);
     }
 
+    public void getUMID_data(String phoneNumber) throws IOException {
+        URL url = new URL("https://hmis.rcil.gov.in/HISServices/service/railtelService/" +
+                "getUMIDData?mobileNo="+phoneNumber);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null)
+            sb.append(line);
+        br.close();
+        System.out.println(sb);
+    }
+
     public void getHospitalList() throws Exception {
         String serverTime = getServerTime();
         String bearer = createBearer(serverTime);
@@ -116,14 +127,14 @@ public class Hospital {
         System.out.println(sb);
     }
 
-    public void getDoctorsList() throws Exception{
+    public void getDoctorsList(String hospitalCode) throws Exception{
         String serverTime = getServerTime();
         String bearer = createBearer(serverTime);
 
         HttpURLConnection con = (HttpURLConnection) new URL(
                 "https://hmis.rcil.gov.in/HISServices/service/mobile-service/consultantByDept?deptCode="+
                         URLEncoder.encode(encrypt("0"), StandardCharsets.UTF_8)+"&hospCode="
-                        +URLEncoder.encode(encrypt("20133"), StandardCharsets.UTF_8)).openConnection();
+                        +URLEncoder.encode(encrypt(hospitalCode), StandardCharsets.UTF_8)).openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Authorization", "Bearer " + bearer);
         con.setRequestProperty("X-App-Encrypted", "true");

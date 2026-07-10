@@ -22,11 +22,13 @@ public class Main{
         hospital.bookAppointment(jsonObject);*/
 
         //hospital.getHospitalList();
-
+/*
         hospital.getPatientVisitData("201332200002912");
 
         hospital.getPatientPrescription("20133",
-                "201332200002912","19111001", "7","2026-06-23 10:31:18.0");
+                "201332200002912","19111001", "7","2026-06-23 10:31:18.0");*/
+
+        hospital.getUMID_data("8340287320");
 
 
     }
